@@ -22,7 +22,7 @@ A Management system written in VB.Net allows the information to be managed effic
 <hr size="15">
 
 ## User Interface - Management Functions
-Each business area to be managed has it's own menu
+Each business area to be managed has its own menu
 
  
 ![Figure 3. Management Functions.](Exams-Functions.jpg)
