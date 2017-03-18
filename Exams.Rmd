@@ -1,0 +1,20 @@
+---
+title: "Exams System"
+author: "Suzanne Fox"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Database
+A SQL Server database holds information for the objects in the system - Candidates, Exams Centres, Venues within the centre, Session timetables, and results. A partial diagram is shown below. 
+
+![Figure 1. EAR diagram for a section of the database](Exams-EAR.jpg)
+
+<hr size="15">
+
+## User Interface - Main Menu
+A Management system written in VB.Net allows the information to be managed efficiently.
+ 
+![Figure 2. Main Menu.](Exams-FrontScreen.jpg)
