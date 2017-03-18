@@ -18,3 +18,11 @@ A SQL Server database holds information for the objects in the system - Candidat
 A Management system written in VB.Net allows the information to be managed efficiently.
  
 ![Figure 2. Main Menu.](Exams-FrontScreen.jpg)
+
+<hr size="15">
+
+## User Interface - Management Functions
+Each area to be managed has it's own area
+
+ 
+![Figure 3. Management Functions.](Exams-Functions.jpg)
