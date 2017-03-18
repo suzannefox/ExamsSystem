@@ -8,7 +8,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Database
-A SQL Server database holds information for the objects in the system - Candidates, Exams Centres, Venues within the centre, Session timetables, and results. A partial diagram is shown below. 
+A SQL Server database holds information for the objects in the system - Candidates, Exams Centres, Venues within the centre, Session timetables, and results. A partial EAR diagram is shown below. 
 
 ![Figure 1. EAR diagram for a section of the database](Exams-EAR.jpg)
 
