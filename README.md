@@ -1,4 +1,4 @@
-﻿# ExamsSystem
+﻿# Exams System
 
 ## RSS Exams Management System 
 This system was written to provide the RSS with an efficient way of managing 
