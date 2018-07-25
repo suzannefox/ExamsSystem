@@ -7,6 +7,19 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## Background
+
+The requirement was to build a system to manage annual exams held in May each year.
+
+Typically around 800 candidates worldwide sit for one of three qualifications. Qualifications may not be taken concurrently.
+Each qualification requires multiple papers (between 2 to 5 depending on the qualification) to be passed before it can be awarded. There is no requirement to sit all the papers in the same year, and a failed paper can be retaken any number of times.
+
+There are 35 exam centres, a centre can have more than one venue, potentially hosting more than one exam at the same time. Exams are timetabled to happen on the same day worldwide, at slightly different times to respect regional hours.
+
+Candidate
+
+Once papers are graded, the marks are entered into the system, and a report run to show each candidates progress towards their qualification. Slight fails are reported and a decision taken on whether to 
+
 ## Database
 A SQL Server database holds information for the objects in the system - Candidates, Exams Centres, Venues within the centre, Session timetables, and results. A partial EAR diagram is shown below. 
 
