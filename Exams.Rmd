@@ -16,7 +16,7 @@ Each qualification requires multiple papers (between 2 to 5 depending on the qua
 
 There are 35 exam centres, a centre can have more than one venue, potentially hosting more than one exam at the same time. Exams are timetabled to happen on the same day worldwide, at slightly different times to respect regional hours.
 
-Candidate
+Candidate details 
 
 Once papers are graded, the marks are entered into the system, and a report run to show each candidates progress towards their qualification. Slight fails are reported and a decision taken on whether to 
 
