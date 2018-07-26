@@ -1,4 +1,4 @@
-# Candidate Object Specification - Partial Example
+# Candidate Object Specification - Example Code Extract
 
 Public Class Candidate
 
@@ -18,9 +18,9 @@ Public Class Candidate
     
     ....
 
-  '  ---------------------------------------------------------
-  ' These come from iMIS
-    ---------------------------------------------------------
+  ---------------------------------------------------------
+  These come from iMIS
+  ---------------------------------------------------------
   
     Private _iMIS_FullName As String
     Private _iMIS_OnlyName As String
@@ -31,9 +31,9 @@ Public Class Candidate
     Private _iMIS_Address As String
     Private _iMIS_Phone As String
 
-  ' =========================================================
-  ' Getter and setter methods for the variables
-  ' =========================================================
+  ---------------------------------------------------------
+  Getter and setter methods for the variables
+  ---------------------------------------------------------
     Public Property Id() As String
         Get
             Return _Id
@@ -43,10 +43,10 @@ Public Class Candidate
         End Set
     End Property
 
-  ' =========================================================
-  ' Some are not settable by the world, usually because
-  ' they come from iMIS
-  ' =========================================================
+  ---------------------------------------------------------
+  Some are not settable by the world, usually because
+  they come from iMIS
+  ---------------------------------------------------------
     Public ReadOnly Property IsEntered() As Boolean
         Get
             Return _IsEntered
@@ -59,11 +59,10 @@ Public Class Candidate
         End Get
     End Property
 
-  ' =========================================================
-  ' Methods to manage the candidate data
-  ' =========================================================
+  ---------------------------------------------------------
+  Methods to manage the candidate data
+  ---------------------------------------------------------
 
-  ' Add a candidate note
     Public Sub AddNote(ByVal sNote As String)
         If sNote.Length > 0 Then fn_WriteDataToSQL("ADDNOTE", sNote)
     End Sub
@@ -162,9 +161,9 @@ Public Class Candidate
         If _Database = "" Then _Database = "UNKNOWN"
     End Sub
 
-    ' =====================================================================================
-    ' Worker Subroutines and functions
-    ' =====================================================================================
+  ---------------------------------------------------------
+  Worker Subroutines and functions
+  ---------------------------------------------------------
 
     Private Function fn_ReturnEligiblePapers() As DataTable
         Dim _dt As DataTable
