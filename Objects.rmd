@@ -1,4 +1,4 @@
-## Semantic analysis of the specification to identify the required objects
+## Semantic analysis of the specification to identify the objects for the system
 
 The requirement was to build a system to manage annual exams held in May each year. The system to be replaced was a manual one
 using spreadsheets, paper forms and word documents. This system had a high administrative cost, was prone to error, and it was 
