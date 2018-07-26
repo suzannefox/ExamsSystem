@@ -1,4 +1,22 @@
-# Candidate Object Specification - Example Code Extract
+# Candidate Object Specification
+
+Object Fields (Partial) -
+  - iMIS ID
+  - Name (From iMIS)
+  - Status (From iMIS)
+  - Past Papers (array of Paper objects WHERE Status = 'Complete' )
+  - Special Needs
+  - Notes
+  - Entries (array of Paper objects WHERE Status = 'Active' ) 
+  - Exam Centre
+  
+ Object Methods (Partial) -
+  - On Instantiation : Get Candidate data
+  - Change Entry (Add/Delete)
+  - Change Exam Centre
+  - Enter Marks
+
+# Example Code Extract
 
 Public Class Candidate
 
