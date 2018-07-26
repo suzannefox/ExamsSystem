@@ -1,0 +1,305 @@
+# Candidate Object Specification - Partial Example
+
+Public Class Candidate
+
+  ' =========================================================
+  ' Declare internal variables visible only within the object
+  ' =========================================================
+  
+    Private _Id As String
+    Private _Database As String
+    Private _NameForCertificate As String
+    Private _CertificateLevel As String
+    Private _OnHold As Boolean = False
+    Private _SpecialNeeds As Boolean = False
+    Private _Status As String
+    Private _Venue As String
+    Private _Centre_Number As String
+    
+    ....
+
+  ' =========================================================
+  ' These come from iMIS
+  ' =========================================================
+  
+    Private _iMIS_FullName As String
+    Private _iMIS_OnlyName As String
+    Private _iMIS_Type As String
+    Private _iMIS_Status As String
+    Private _iMIS_Category As String
+    Private _iMIS_EMail As String
+    Private _iMIS_Address As String
+    Private _iMIS_Phone As String
+
+  ' =========================================================
+  ' Getter and setter methods for the variables
+  ' =========================================================
+    Public Property Id() As String
+        Get
+            Return _Id
+        End Get
+        Set(ByVal value As String)
+            _Id = value
+        End Set
+    End Property
+
+  ' =========================================================
+  ' Some are not settable by the world, usually because
+  ' they come from iMIS
+  ' =========================================================
+    Public ReadOnly Property IsEntered() As Boolean
+        Get
+            Return _IsEntered
+        End Get
+    End Property
+
+    ReadOnly Property EMail() As String
+        Get
+            Return _iMIS_EMail
+        End Get
+    End Property
+
+  ' =========================================================
+  ' Methods to manage the candidate data
+  ' =========================================================
+
+  ' Add a candidate note
+    Public Sub AddNote(ByVal sNote As String)
+        If sNote.Length > 0 Then fn_WriteDataToSQL("ADDNOTE", sNote)
+    End Sub
+    
+    ' -- Add a candidate need
+    Public Sub AddNeed(ByVal sNeed As String)
+        If sNeed.Length > 0 Then fn_WriteDataToSQL("ADDSPECIALNEED", sNeed)
+    End Sub
+    
+    ' -- Change the current status
+    Public Sub AddStatus(ByVal sStatus As String)
+        Me.fn_WriteDataToSQL("STATUS", sStatus)
+        Me.GetStatus()
+    End Sub
+    
+    ' -- remove the withdrawal status from a candidate
+    Public Sub UnWithdraw()
+        Me.fn_WriteDataToSQL("UNWITHDRAW", "")
+        Me.GetStatus()
+    End Sub
+    
+    ' -- Register a New Candidate
+    Public Sub AddCandidateRecord()
+        If Registered = "Yes" Then Exit Sub
+        fn_WriteDataToSQL("ADDCANDIDATE", NameForCertificate) ' -- Add Record to tbl_Candidates
+        fn_WriteDataToSQL("ADDLEVEL", CertificateLevel)          ' -- Add Record to tbl_CandidateLevel
+        fn_WriteDataToSQL("STATUS", "Import From iMIS")          ' -- Write a record to tbl_CandidateStatus
+    End Sub
+    
+    ' -- Register a New Exam Paper
+    Public Sub AddPaper(ByVal sPaper As String)
+        fn_WriteDataToSQL("EXAMPAPER", sPaper)                   ' -- Add Record to tbl_CandidatePaper
+    End Sub
+    
+    ' -- Enter the result for an exam paper
+    Public Sub AddPaperResult(ByVal Period As String, _
+                              ByVal Paper As String, _
+                              ByVal Mark As Integer, _
+                              ByVal ActualMark As Integer, _
+                              ByVal Decision As String, _
+                              ByVal Comment As String)
+        fn_WritePaperResult(Period, Paper, Mark, ActualMark, Decision, Comment)  ' -- Add result
+    End Sub
+    
+    
+  ' =========================================================
+  ' This is what happens when a new candidate instance is created
+  ' =========================================================
+    Public Sub New(ByVal sID As String)
+        ' -- Check ID exists in database
+        _Id = sID
+        Dim _dt As New DataTable
+
+        ' -- Get Exams database information
+        _dt = fn_ReturnCandidateDetails(sID, "EXISTSINEXAMS")
+        If _dt.Rows.Count > 0 Then
+            _Database = "EXAMS"
+            _NameForCertificate = _dt.Rows(0).Item("NAME_FOR_CERTIFICATE").ToString
+
+            ' -- Get Certificate Level for Current Period
+            Dim _dtLevel As New DataTable
+            _dtLevel = Me.fn_ReturnDetails("CERTIFICATELEVEL")
+            If _dtLevel.Rows.Count > 0 Then
+                _CertificateLevel = _dtLevel.Rows(0).Item("CERTIFICATE_LEVEL")
+            Else
+                _CertificateLevel = "NONE ASSIGNED"
+            End If
+            Me.GetStatus()
+            Me.GetVenue()
+            Me.GetSpecialNeeds()
+            Me.GetIsEntered()
+        End If
+
+        ' -- Get iMIS Information
+        _dt = New DataTable
+        _dt = fn_ReturnCandidateDetails(sID, "EXISTSINIMIS")
+
+        If _dt.Rows.Count > 0 Then
+            Dim _dr As DataRow = _dt.Rows(0)
+            If _Database = "" Then _Database = "IMIS"
+            _iMIS_Type = _dr.Item("TYPE_DESCRIPTION").ToString
+            _iMIS_Status = _dr.Item("STATUS_DESCRIPTION").ToString
+            _iMIS_Category = _dr.Item("CATEGORY_DESCRIPTION").ToString
+
+            _iMIS_EMail = _dr.Item("EMAIL").ToString
+            _iMIS_FullName = _dr.Item("FULL_NAME").ToString
+            _iMIS_OnlyName = (_dr.Item("FIRST_NAME").ToString + " " + _dr.Item("MIDDLE_NAME").ToString + " " + _dr.Item("LAST_NAME").ToString)
+            _iMIS_Address = _dr.Item("FULL_ADDRESS")
+            _iMIS_Phone = "H : " + _dr.Item("HOME_PHONE") + vbCrLf + "W : " + _dr.Item("WORK_PHONE") + vbCrLf + "M : " + _dr.Item("TOLL_FREE")
+
+            Do Until _iMIS_OnlyName.Contains("  ") = False
+                _iMIS_OnlyName = _iMIS_OnlyName.Replace("  ", " ")
+            Loop
+        End If
+
+        If _Database = "" Then _Database = "UNKNOWN"
+    End Sub
+
+    ' =====================================================================================
+    ' Worker Subroutines and functions
+    ' =====================================================================================
+
+    Private Function fn_ReturnEligiblePapers() As DataTable
+        Dim _dt As DataTable
+        Dim _dtFinished As DataTable
+        Dim _dtRegistered As DataTable
+        Dim _dtPaper As New DataTable
+        Dim sFilter As String = ""
+
+        ' -- Get the list of eligible papers for the current certificate level
+
+        _dt = MyExamSystem.EligiblePapers(CertificateLevel)
+        _dtFinished = fn_ReturnDetails("PASTPAPERS")
+        _dtRegistered = fn_ReturnDetails("PAPERS")
+
+        ' -- identify any papers entered previously
+        _dt.Columns.Add("Previous")
+        For Each _dr As DataRow In _dt.Rows
+            sFilter = "Paper='" + _dr.Item("Paper").ToString + "'"
+            _dtPaper = New DataView(_dtFinished, sFilter, "", DataViewRowState.CurrentRows).ToTable
+            If _dtPaper.Rows.Count = 0 Then Continue For
+
+            Dim sDetails As String = _dtPaper.Rows(0).Item("Period").ToString
+
+            If _dtPaper.Rows(0).Item("Status").ToString = "Finished" Then
+                sDetails += ", Mark " + _dtPaper.Rows(0).Item("Mark").ToString
+            Else
+                sDetails += "," + _dtPaper.Rows(0).Item("Status").ToString
+            End If
+            _dr.Item("Previous") = sDetails
+        Next
+
+    Private Function fn_ReturnDetails(ByVal sType As String) As DataTable
+        Dim _dt As New DataTable
+        Dim sSQL As String = ""
+        Dim sqlDataAdapter As SqlClient.SqlDataAdapter = Nothing
+
+        Try
+            Select Case sType.ToUpper
+                Case "CERTIFICATELEVEL"
+                    sSQL = "SELECT * from VIEW_CANDIDATES_CERTIFICATE_LEVEL "
+                    sSQL += "where ID='" + Id + "'"
+
+                Case "PASTPAPERS"
+                    sSQL = "SELECT * FROM VIEW_CANDIDATES_PAPERS "
+                    sSQL += "WHERE ID='" + Id + "' AND NOT Status='Registered'"
+
+                Case "PAPERS"
+                    sSQL = "SELECT * FROM VIEW_CANDIDATES_PAPERS "
+                    sSQL += "WHERE ID='" + Id + "' AND Status='Registered'"
+
+                Case "EXAMSTIMETABLE"
+                    sSQL = "SELECT * FROM tbl_v_AllCurrentPapersTimetable() "
+                    sSQL += "WHERE ID='" + _Id + "' ORDER BY STARTDATETIME "
+
+                Case "ALLPAPERS"
+                    sSQL = "SELECT * FROM VIEW_CANDIDATES_PAPERS "
+                    sSQL += "WHERE ID='" + Id + "' "
+                    sSQL += "ORDER BY CASE Paper WHEN 'OC' THEN 1 WHEN 'HC' THEN 2 WHEN 'GRAD' THEN 3 ELSE 4 END"
+
+                    'Case "PAPERSTAKEN"
+                    '    sSQL = "SELECT * FROM tbl_CandidatePapers "
+                    '    sSQL += "WHERE ID='" + Id + "'"
+
+                Case "ELIGIBLEPAPERS"
+                    sSQL = "SELECT Paper,Title "
+                    sSQL += "FROM tbl_ExamPapers "
+                    sSQL += "WHERE CERTIFICATE_LEVEL like '%" + CertificateLevel + "%'"
+
+                Case "NOTES"
+                    sSQL = "SELECT * FROM tbl_CandidateNotes "
+                    sSQL += "WHERE ID='" + Id + "' "
+                    sSQL += "ORDER BY ID_NOTE DESC"
+
+                Case "STATUSHISTORY"
+                    sSQL = "SELECT ID,Period,StatusDate,Description,NextStep "
+                    sSQL += "FROM VIEW_Candidates_StatusHistory "
+                    sSQL += "WHERE ID='" + Id + "' "
+                    sSQL += "AND Period='" + sCurrentPeriod + "' "
+                    sSQL += "ORDER BY ID_CandidateStatus DESC"
+
+                Case "CERTIFICATELEVELHISTORY"
+                    sSQL = "SELECT * FROM tbl_CandidateLevel "
+                    sSQL += "WHERE ID='" + Id + "' "
+                    sSQL += "ORDER BY PERIOD DESC"
+
+                Case "CURRENTSTATUS"
+                    sSQL = "SELECT * from VIEW_Candidates_StatusSummary "
+                    sSQL += "WHERE ID='" + Id + "' AND Period='" + sCurrentPeriod + "'"
+
+                Case "EXISTSINEXAMS"
+                    sSQL = "SELECT * FROM tbl_Candidates "
+                    sSQL += "WHERE ID='" + Id + "'"
+
+                Case "EXISTSINIMIS"
+                    sSQL = "SELECT * FROM VIEW_IMIS_MEMBERDETAILS_FULL "
+                    sSQL += "WHERE ID='" + Id + "'"
+
+                Case "SYSTEMSTATUS"
+                    sSQL = "SELECT * FROM tbl_SystemStatus"
+
+                Case "VENUE"
+                    sSQL = "SELECT * FROM tbl_CandidateVenue Where Id='" + Id + "'"
+
+                Case "SPECIALNEEDS"
+                    sSQL = "SELECT * FROM tbl_CandidateSpecialNeeds WHERE Id= '" + Id + "'"
+
+                Case "LEVELPERIOD"
+                    sSQL = "SELECT * FROM tbl_CandidateLevel WHERE Id= '" + Id + "' AND PERIOD='" + sCurrentPeriod + "'"
+
+                Case "ALLCERTIFICATES"
+                    sSQL = "SELECT * "
+                    sSQL += "FROM VIEW_CANDIDATES_CERTIFICATES "
+                    sSQL += "where ID='" + Id + "'"
+
+                Case "PAPERS_TOWARDS_OC"
+                    sSQL = "SELECT * FROM tbl_v_AllCurrentPapersTowardsCertificate('OC','" + Id + "','')"
+
+                Case "PAPERS_TOWARDS_HC"
+                    sSQL = "SELECT * FROM tbl_v_AllCurrentPapersTowardsCertificate('HC','" + Id + "','')"
+
+                Case "PAPERS_TOWARDS_GRAD"
+                    sSQL = "SELECT * FROM tbl_v_AllCurrentPapersTowardsCertificate('GRAD','" + Id + "','')"
+
+            End Select
+
+            sqlDataAdapter = New SqlClient.SqlDataAdapter(sSQL, sConnStrExam)
+            sqlDataAdapter.Fill(_dt)
+
+        Catch ex As Exception
+            MessageBox.Show(ex.ToString)
+        End Try
+
+        ' -- return the datatable 
+        Return _dt
+
+    End Function
+    
+End Class
