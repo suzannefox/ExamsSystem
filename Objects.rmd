@@ -15,7 +15,7 @@ times purely to respect regional time differences.
 The CRM system (iMIS) is used to maintain Candidate details in an underlying SQL database. Exam candidates can be identified by 
 a unique user `ID` and a user status of EXA in the iMIS NAME table. Information about each Candidates proper name, current address,
 payment status etc needs to be sourced from here. Information to be maintained in the Exams system which extends the iMIS data
-is `special` requirements, past exams taken, exams being taken this period, exam centre allocation.
+is `special requirements`, past exams taken, exams being taken this period, exam centre allocation.
 
 Once papers are graded and mediated, the `marks` are entered into the system. The system "knows" the `rules` to apply and can determine 
 whether the papers candidates have passed meet the qualification requirements, and at what grade - "Fail", "Pass", "Merit", "Distinction" 
