@@ -1,12 +1,4 @@
----
-title: "Exams System"
-author: "Suzanne Fox"
-output: html_document
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 ## Background
 
 The requirement was to build a system to manage annual exams held in May each year. The system to be replaced was a manual one
