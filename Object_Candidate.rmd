@@ -16,6 +16,7 @@ Object Fields (Partial) -
   - Change Exam Centre
   - Enter Marks
   - Getter and setter methods for each variable
+  - toString method to return Candidate details
 
 # Example of use
 
