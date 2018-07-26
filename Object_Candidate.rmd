@@ -2,9 +2,9 @@
 
 Public Class Candidate
 
-  ' =========================================================
-  ' Declare internal variables visible only within the object
-  ' =========================================================
+  ---------------------------------------------------------
+  Declare internal variables visible only within the object
+  ---------------------------------------------------------
   
     Private _Id As String
     Private _Database As String
@@ -18,9 +18,9 @@ Public Class Candidate
     
     ....
 
-  ' =========================================================
+  '  ---------------------------------------------------------
   ' These come from iMIS
-  ' =========================================================
+    ---------------------------------------------------------
   
     Private _iMIS_FullName As String
     Private _iMIS_OnlyName As String
