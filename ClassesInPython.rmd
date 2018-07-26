@@ -1,2 +1,4 @@
 
+# This is a good resource for OO syntax in Python
+
 https://python-textbok.readthedocs.io/en/1.0/Classes.html
