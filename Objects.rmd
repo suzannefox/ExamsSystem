@@ -6,7 +6,7 @@ very difficult to produce summary reports.
 
 Typically around 800 `candidates` worldwide sit for one of three `qualifications`. Qualifications may not be taken concurrently.
 Each qualification requires multiple `papers` (between 2 to 5 depending on the qualification) to be passed before it can be awarded.
-There is no requirement to sit all the papers in the same `year`, and a failed paper can be retaken any number of times. 
+There is no requirement to sit all the papers in the same `exam period`, and a failed paper can be retaken any number of times. 
 
 There are 35 exam `centres`, a centre can have more than one `venue`, so potentially hosting more than one exam at the same time. 
 There is a strict exam `timetable` each year with exams timetabled to happen on the same day worldwide, at staggered 
