@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ## Background
 
-The requirement was to build a system to manage annual exams held in May each year. The system to be replaced was a manual one comprising a selection of spreadsheets, paper forms and word documents.
+The requirement was to build a system to manage annual exams held in May each year. The system to be replaced was a manual one comprising of spreadsheets, paper forms and word documents. This system had a high administrative cost, was prone to error, and it was very difficult to produce summary reports.
 
 Typically around 800 candidates worldwide sit for one of three qualifications. Qualifications may not be taken concurrently.
 Each qualification requires multiple papers (between 2 to 5 depending on the qualification) to be passed before it can be awarded. There is no requirement to sit all the papers in the same year, and a failed paper can be retaken any number of times.
