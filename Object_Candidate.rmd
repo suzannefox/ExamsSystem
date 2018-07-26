@@ -107,10 +107,9 @@ Public Class Candidate
         fn_WritePaperResult(Period, Paper, Mark, ActualMark, Decision, Comment)  ' -- Add result
     End Sub
     
-    
-  ' =========================================================
-  ' This is what happens when a new candidate instance is created
-  ' =========================================================
+  ---------------------------------------------------------
+  This is what happens when a new candidate instance is created
+  ---------------------------------------------------------
     Public Sub New(ByVal sID As String)
         ' -- Check ID exists in database
         _Id = sID
