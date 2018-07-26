@@ -4,10 +4,10 @@ Object Fields (Partial) -
   - iMIS ID
   - Name (From iMIS)
   - Status (From iMIS)
-  - Past Papers (array of Paper objects WHERE Status = 'Complete' )
+  - Past Papers (array of Paper objects WHERE Status = 'Complete' for this Candidate)
   - Special Needs
   - Notes
-  - Entries (array of Paper objects WHERE Status = 'Active' ) 
+  - Entries (array of Paper objects WHERE Status = 'Active' for this Candidate) 
   - Exam Centre
   
  Object Methods (Partial) -
