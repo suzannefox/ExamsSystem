@@ -17,6 +17,14 @@ Object Fields (Partial) -
   - Enter Marks
   - Getter and setter methods for each variable
 
+# Example of use
+
+Dim myCandidate as New Candidate("001876")
+print(myCandidate.getStatus())
+print(myCandidate.getPapers())
+
+myCandidate.changeCentre("CHX")
+
 # Example Code Extract
 
 Public Class Candidate
