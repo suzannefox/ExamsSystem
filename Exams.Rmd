@@ -47,7 +47,7 @@ A SQL Server database holds information for the objects in the system - Candidat
 <hr size="15">
 
 ## User Interface - Main Menu
-A Management system written in VB.Net allows the information to be managed efficiently.
+A Front-End Management system written in VB.Net.
  
 ![Figure 2. Main Menu.](Exams-FrontScreen.jpg)
 
