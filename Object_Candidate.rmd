@@ -19,11 +19,13 @@ Object Fields (Partial) -
 
 # Example of use
 
-Dim myCandidate as New Candidate("001876")
-print(myCandidate.getStatus())
-print(myCandidate.getPapers())
+- Dim myCandidate as New Candidate("001876")
+- print(myCandidate.toString())
+- print(myCandidate.getPapers())
 
-myCandidate.changeCentre("CHX")
+- Dim Status as string = myCandidate.getStatus()
+
+- myCandidate.changeCentre("CHX")
 
 # Example Code Extract
 
